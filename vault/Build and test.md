@@ -3,6 +3,8 @@
 `scripts/check.sh` is the one-command gate: plugin and tools build, DiscoveryDump runs. The [[Pre-commit hook]] and [[Continuous integration]] both call it. Setup is on [[Local environment]].
 
 ## Commands
+The `Makefile` wraps these: `make build` (plugin only), `make test` (`scripts/check.sh`; add `FITS=<phd2.fits>` and optionally `OUT=<dir>`, default `out/harness`, to run the OfflineHarness too), `make clean`.
+
 ```sh
 export PATH=$HOME/.dotnet:$PATH DOTNET_ROOT=$HOME/.dotnet      # if the SDK is user-local
 cd plugin && dotnet build -c Release                          # stages ../dist/HA Telemetry/
@@ -17,3 +19,7 @@ cd tools/OfflineHarness && dotnet run -- <phd2.fits> <out-dir> # ALL PASS / SOME
 
 ## Reading NINA's API
 `ilspycmd` 8.2.0.7535 (newer versions need a newer runtime) with `DOTNET_ROLL_FORWARD=Major`, run against `~/.nuget/packages/nina.*/3.2.0.9001/lib/*/*.dll`. Results go on [[NINA data sources]].
+
+## Gotchas
+- The `Makefile` resolves `dotnet` to a full path (PATH, then `~/.dotnet/dotnet`) and calls `$(DOTNET)`. macOS's stock GNU make 3.81 looks up simple recipe commands with its *own* PATH, so `export PATH := ...` in the Makefile did not help: `make: dotnet: No such file or directory`.
+- The harness exits 1 on a failed check and aborts (exit 134) on an unreadable FITS; either fails `make test`.

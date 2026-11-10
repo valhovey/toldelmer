@@ -7,4 +7,5 @@ What a machine needs to build and check [[HA Telemetry plugin]]. The user-facing
   - macOS/Linux: `dotnet-install.sh --channel 8.0` into `~/.dotnet`, then `DOTNET_ROOT=$HOME/.dotnet` and `PATH=$HOME/.dotnet:$PATH`. The author's Mac uses this (SDK 8.0.427 as of 2026-11-09), so `dotnet` is not on PATH in a fresh non-login shell; `scripts/check.sh` handles that ([[Pre-commit hook]]).
 - **No NINA install needed.** `NINA.Plugin` comes from nuget.org with `ExcludeAssets=runtime` ([[Plugin loading]]).
 - `git config core.hooksPath .githooks` to turn on the [[Pre-commit hook]].
+- `make` for `make build` / `make test` ([[Build and test]]). Stock on macOS and most Linux; not on Windows, where `sh scripts/check.sh` from Git Bash or the raw `dotnet` commands do the same.
 - Optional: `uv` for `dashboard/push_resource.py`, Node.js for `node --check` on the cards ([[Dashboard cards]]), `ilspycmd` for reading NINA's API ([[Build and test]]).
