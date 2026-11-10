@@ -6,7 +6,7 @@
 
 Hello! My name is Val, I do a lot of [astrophotography](https://app.astrobin.com/u/valence) in my free time and also am an enthusiast [Home Assistant](https://www.home-assistant.io/) user. For a long time, I've wanted to build a dashboard that enables a read-only view of my observatory in Home Assistant (both for the cool factor, and also because RDP into Windows for NINA is kind of clunky).
 
-As an upfront disclosure, I finally caved and used an LLM to assist in producing this plugin. I've done my best to both vertically test and build in unit tests for this, but keep in mind that most of this was created using Claude. More on that later, because there are some nice things I have included here if you want to extend or contribute to the project using my fixtures.
+As an upfront disclosure, I used an LLM to assist in producing this plugin. I've done my best to both vertically test and build in unit tests for this, but keep in mind that most of this was created using Claude. More on that later, because there are some nice things I have included here if you want to extend or contribute to the project using my fixtures.
 
 As one final LLM disclosure, this Readme is hand-authored but outside of it content will be mixed human-contribution and LLM contribution.
 
