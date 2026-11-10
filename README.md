@@ -2,6 +2,8 @@
 
 [![Build](https://github.com/valhovey/toldelmer/actions/workflows/build.yml/badge.svg)](https://github.com/valhovey/toldelmer/actions/workflows/build.yml)
 
+<img width="2770" height="1752" alt="image" src="https://github.com/user-attachments/assets/f6746802-e838-4add-8c59-80b22b47a67e" />
+
 ## Overview
 
 Hello! My name is Val, I do a lot of [astrophotography](https://app.astrobin.com/u/valence) in my free time and also am an enthusiast [Home Assistant](https://www.home-assistant.io/) user. For a long time, I've wanted to build a dashboard that enables a read-only view of my observatory in Home Assistant (both for the cool factor, and also because RDP into Windows for NINA is kind of clunky).
