@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup><OutputType>Exe</OutputType><TargetFramework>net8.0</TargetFramework><Nullable>disable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings></PropertyGroup>
+  <ItemGroup>
+    <Compile Include="../../plugin/Log.cs" />
+    <Compile Include="../../plugin/Mqtt/Discovery.cs" />
+    <Compile Include="../../plugin/Mqtt/MqttLink.cs" />
+    <Compile Include="../../plugin/Phd2/GuideFrame.cs" />
+    <Compile Include="../../plugin/Phd2/Phd2Client.cs" />
+    <PackageReference Include="MQTTnet" Version="4.3.7.1207" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+  </ItemGroup>
+</Project>

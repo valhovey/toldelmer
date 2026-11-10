@@ -1,0 +1,10 @@
+# Dashboard cards
+
+`dashboard/` holds the Home Assistant side: `nina-telemetry-cards.js` (three Lovelace custom elements, no build step), `nina-dashboard.yaml` (a sections-view template with `nina_NODE` placeholders), `guide-frame-section.yaml` (an extra section for [[PHD2 guide frame|PHD2 users]]), and `push_resource.py`. Install steps are in the repo README.
+
+- `custom:nina-mount-card` (`entity` = `sensor.<node>_mount_pointing`): a three.js German equatorial mount (three@0.170.0 from esm.sh at runtime). The polar axis points at the visible pole for `attributes.latitude`, falling back to config `latitude` (default 45). The tube follows alt/az. The Dec axis direction comes from p × d with its sign from the pier side. Near Dec ±90° that cross product vanishes, so it uses the hour angle instead, keeping the tube on top and the counterweights down at home. The camera rotates only: zoom and pan are off, and `touch-action: pan-y` keeps page scrolling on phones.
+- `custom:nina-autofocus-card` (`entity` = `sensor.<node>_autofocus`): points with error bars, NINA's hyperbolic or parabolic fit (parsed from the `Fittings` strings), trend lines and the chosen focus. Data from [[Autofocus telemetry]].
+- `custom:nina-history-card` (`entities: [{entity, name, color}]`, `hours`, `height`, `decimals`, `zero`, `min`/`max`, `secondary`): real axes and Fritsch–Carlson monotone lines, which never overshoot between samples and so can't invent guide-error peaks. It fetches history once over the websocket, appends live states, and refetches every 10 min. `secondary` relabels the same gridlines as value × factor on a right axis (e.g. HFR px → ″ using the `image_scale` attribute).
+- `push_resource.py` installs the JS as a `data:` URL module resource over the websocket API (`HA_URL`, `HA_TOKEN`), for setups with no file access to `/config/www`. It finds its own resource by decoding data: URLs and looking for the `nina-telemetry-cards loaded` marker, so the JS must keep that `console.info` line.
+
+Entity ids in the template come from [[Discovery schema]]. Re-check them when entities are renamed.

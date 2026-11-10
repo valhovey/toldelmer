@@ -1,0 +1,110 @@
+title: Telescope
+views:
+  - title: Imaging
+    path: imaging
+    type: sections
+    max_columns: 3
+    sections:
+      - type: grid
+        cards:
+          - type: heading
+            heading: Mount
+            icon: mdi:telescope
+          - type: custom:nina-mount-card
+            entity: sensor.nina_NODE_mount_pointing
+            height: 300
+            grid_options:
+              columns: 12
+              rows: 5
+          - type: tile
+            entity: binary_sensor.nina_NODE_mount_tracking
+          - type: tile
+            entity: sensor.nina_NODE_mount_pier_side
+          - type: tile
+            entity: sensor.nina_NODE_time_to_meridian_flip
+          - type: tile
+            entity: sensor.nina_NODE_flip_phase
+          - type: tile
+            entity: sensor.nina_NODE_target
+            grid_options:
+              columns: 12
+
+      - type: grid
+        cards:
+          - type: heading
+            heading: Guiding
+            icon: mdi:crosshairs-gps
+          - type: custom:nina-history-card
+            title: Guide error
+            hours: 0.25
+            height: 130
+            decimals: 2
+            zero: true
+            entities:
+              - entity: sensor.nina_NODE_guide_ra_error
+                name: RA
+              - entity: sensor.nina_NODE_guide_dec_error
+                name: Dec
+          - type: custom:nina-history-card
+            title: Guide RMS
+            hours: 2
+            height: 110
+            decimals: 2
+            min: 0
+            entities:
+              - entity: sensor.nina_NODE_guide_rms_total
+                name: Total
+              - entity: sensor.nina_NODE_guide_rms_ra
+                name: RA
+              - entity: sensor.nina_NODE_guide_rms_dec
+                name: Dec
+          - type: tile
+            entity: binary_sensor.nina_NODE_guider_guiding
+          - type: tile
+            entity: sensor.nina_NODE_guide_rms_total
+
+      - type: grid
+        cards:
+          - type: heading
+            heading: Camera
+            icon: mdi:camera-iris
+          - type: picture-entity
+            entity: image.nina_NODE_last_preview
+            show_name: false
+            show_state: false
+          - type: tile
+            entity: sensor.nina_NODE_camera_state
+          - type: tile
+            entity: sensor.nina_NODE_camera_temperature
+          - type: tile
+            entity: sensor.nina_NODE_filter
+          - type: tile
+            entity: sensor.nina_NODE_exposure_end
+          - type: custom:nina-history-card
+            title: HFR
+            hours: 4
+            height: 110
+            decimals: 2
+            entities:
+              - entity: sensor.nina_NODE_last_hfr
+                name: HFR
+            secondary:
+              unit: "″"
+              decimals: 2
+              factor_entity: sensor.nina_NODE_last_hfr
+              factor_attribute: image_scale
+
+      - type: grid
+        cards:
+          - type: heading
+            heading: Focus
+            icon: mdi:focus-field
+          - type: custom:nina-autofocus-card
+            entity: sensor.nina_NODE_autofocus
+            grid_options:
+              columns: 12
+              rows: 5
+          - type: tile
+            entity: sensor.nina_NODE_focuser_position
+          - type: tile
+            entity: sensor.nina_NODE_focuser_temperature
