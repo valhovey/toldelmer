@@ -1,6 +1,6 @@
 # Options page
 
-`plugin/Options.xaml` (Options → Plugins → HA Telemetry). NINA looks up the DataTemplate key `"<plugin name>_Options"`, here `HA Telemetry_Options`. Its DataContext is the `HaTelemetryPlugin` instance ([[HA Telemetry plugin]]).
+`plugin/Options.xaml` (Options → Plugins → Toldelmer - HA Telemetry). NINA looks up the DataTemplate key `"<plugin name>_Options"`, here `Toldelmer - HA Telemetry_Options`. It must match `AssemblyTitle` in `Properties/AssemblyInfo.cs` exactly (presumably the page shows no settings otherwise; not tested). Its DataContext is the `HaTelemetryPlugin` instance ([[HA Telemetry plugin]]).
 
 - Settings are per NINA profile, via `PluginOptionsAccessor` keyed by the assembly GUID in `Properties/AssemblyInfo.cs`. **Never change that GUID.** It is the plugin's identity and its options key.
 - The password is stored DPAPI-encrypted (CurrentUser) under `PasswordDpapi`, so the profile XML never holds it in clear. A profile copied to another Windows user loses it.

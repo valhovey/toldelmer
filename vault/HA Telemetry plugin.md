@@ -2,6 +2,8 @@
 
 The NINA plugin in `plugin/` (`NINA.HaTelemetry.dll`, `net8.0-windows`, `NINA.Plugin 3.2.0.9001`, MQTTnet 4.3.7). NINA composes it with MEF at startup. It observes the equipment mediators and publishes retained JSON to MQTT, and Home Assistant picks that up through [[Discovery schema|discovery]]. It is strictly observational; see [[Read-only contract]].
 
+**Naming:** NINA shows it as **Toldelmer - HA Telemetry** (`AssemblyTitle`/`AssemblyProduct`, as of 2026-11-09), and the GitHub repo is `toldelmer`. Everything internal keeps the old name on purpose: `NINA.HaTelemetry.dll`, namespace `NinaHaTelemetry`, install folder `HA Telemetry/`, the `HA Telemetry:` log prefix, MQTT client id `nina-ha-telemetry-<node>`, the HA device model, and the GUID ([[Options page]], [[Plugin loading]]).
+
 ## Classes
 - `HaTelemetryPlugin`: the MEF manifest and [[Options page]] view model. It owns the lifecycle. `Initialize` starts in the background, `Teardown` stops, and a profile change restarts. Start and stop are serialised on a `SemaphoreSlim`, because Initialize, ProfileChanged and Apply can all fire close together.
 - `Mqtt/Discovery`: every entity, topic and template. See [[Discovery schema]].

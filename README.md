@@ -1,4 +1,6 @@
-# HA Telemetry for N.I.N.A.
+# Toldelmer - HA Telemetry for N.I.N.A.
+
+[![Build](https://github.com/valhovey/toldelmer/actions/workflows/build.yml/badge.svg)](https://github.com/valhovey/toldelmer/actions/workflows/build.yml)
 
 A [N.I.N.A.](https://nighttime-imaging.eu/) 3.2 plugin that publishes live imaging telemetry to an MQTT broker as
 [Home Assistant MQTT discovery](https://www.home-assistant.io/integrations/mqtt/#mqtt-discovery) entities. It hooks
@@ -30,7 +32,7 @@ NINA's equipment mediators directly, so it works without any sequence instructio
 1. Download or build `HA Telemetry/` (see [Build](#build)).
 2. Close NINA. Plugins load only at startup.
 3. Copy the `HA Telemetry` folder to `%LOCALAPPDATA%\NINA\Plugins\3.0.0\`.
-4. Start NINA and open **Options → Plugins → HA Telemetry**. Enter your broker host, port, username and password,
+4. Start NINA and open **Options → Plugins → Toldelmer - HA Telemetry**. Enter your broker host, port, username and password,
    then click **Apply and reconnect**. The status line should say `Connected to …`.
 
 The entities appear in Home Assistant under **Settings → Devices & services → MQTT**.
@@ -83,8 +85,37 @@ The schema is `plugin/Mqtt/Discovery.cs`.
 
 ## Build
 
-Needs the .NET 8 SDK. It builds on Windows, macOS or Linux (`EnableWindowsTargeting`), but runs only inside NINA on
-Windows.
+### Set up a dev environment
+
+You need **git** and the **.NET 8 SDK**. No NINA install is needed to build: the `NINA.Plugin` package and MQTTnet
+come from nuget.org on the first build. Windows, macOS and Linux all work (`EnableWindowsTargeting`), but the plugin
+only runs inside NINA on Windows.
+
+1. Install the .NET 8 SDK:
+   - Windows: `winget install Microsoft.DotNet.SDK.8`
+   - macOS / Linux, user-local, no admin rights:
+     ```sh
+     curl -sSL https://dot.net/v1/dotnet-install.sh | bash -s -- --channel 8.0
+     export DOTNET_ROOT=$HOME/.dotnet PATH=$HOME/.dotnet:$PATH   # add to your shell profile
+     ```
+   - Or the installer from [dotnet.microsoft.com](https://dotnet.microsoft.com/download/dotnet/8.0).
+
+   `dotnet --list-sdks` should list an `8.0.x` SDK. A newer SDK can also build `net8.0` projects.
+2. Turn on the pre-commit hook, once per clone:
+   ```sh
+   git config core.hooksPath .githooks
+   ```
+   Every commit then runs `scripts/check.sh` and is refused if the build fails. Use `git commit --no-verify` to skip
+   it once.
+3. Run the check yourself:
+   ```sh
+   scripts/check.sh      # builds the plugin and tools, smoke-tests DiscoveryDump; prints "check: OK"
+   ```
+
+Optional, for the dashboard: [uv](https://docs.astral.sh/uv/) runs `dashboard/push_resource.py`, and Node.js
+(`node --check`) syntax-checks the cards.
+
+### Build and test
 
 ```sh
 cd plugin && dotnet build -c Release      # stages ../dist/HA Telemetry/
@@ -97,7 +128,13 @@ cd tools/DiscoveryDump && dotnet run -- nina_example                   # print e
 cd tools/OfflineHarness && dotnet run -- <phd2-frame.fits> <out-dir>   # offline, PHD2 and render checks
 ```
 
-The harness needs one FITS frame saved by PHD2 (**File → Save Image**) and prints `ALL PASS` when it succeeds.
+The harness needs one FITS frame saved by PHD2 (**File → Save Image**) and prints `ALL PASS` when it succeeds. It is
+not part of `scripts/check.sh` or CI, because the frame is not in the repo.
+
+### CI
+
+GitHub Actions (`.github/workflows/build.yml`) runs `scripts/check.sh` on Ubuntu for every push and pull request to
+`main`. The built `HA Telemetry/` folder is attached to each run as the `HA-Telemetry` artifact.
 
 ## Compatibility
 

@@ -1,6 +1,6 @@
 # nina-ha-telemetry vault
 
-Working knowledge for **HA Telemetry**, a read-only N.I.N.A. 3.2 plugin that publishes imaging telemetry to MQTT as Home Assistant discovery entities. Start with [[HA Telemetry plugin]].
+Working knowledge for **Toldelmer - HA Telemetry** (repo `toldelmer`), a read-only N.I.N.A. 3.2 plugin that publishes imaging telemetry to MQTT as Home Assistant discovery entities. Start with [[HA Telemetry plugin]].
 
 ## The plugin
 - [[HA Telemetry plugin]]: architecture, the classes and how they fit together
@@ -22,6 +22,9 @@ Working knowledge for **HA Telemetry**, a read-only N.I.N.A. 3.2 plugin that pub
 
 ## Building, testing, shipping
 - [[Build and test]]: SDK, build, DiscoveryDump, OfflineHarness
+- [[Local environment]]: SDK install, `~/.dotnet`, what's optional
+- [[Pre-commit hook]]: `.githooks/pre-commit` and `scripts/check.sh`
+- [[Continuous integration]]: GitHub Actions `Build` workflow, badge, artifact
 - [[Plugin loading]]: install path, load contexts, updating without stopping NINA, NINA version pinning
 
 ## Working in this repo

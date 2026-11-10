@@ -2,10 +2,10 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 
 [assembly: Guid("6b0f3e2a-7c41-4d8e-9a55-2f1d0c8e4b73")]
-[assembly: AssemblyTitle("HA Telemetry")]
+[assembly: AssemblyTitle("Toldelmer - HA Telemetry")]
 [assembly: AssemblyDescription("Publishes live, read-only NINA telemetry to MQTT using Home Assistant discovery. No sequence instructions needed.")]
 [assembly: AssemblyCompany("Val Hovey")]
-[assembly: AssemblyProduct("HA Telemetry")]
+[assembly: AssemblyProduct("Toldelmer - HA Telemetry")]
 [assembly: AssemblyCopyright("Copyright © 2026 Val Hovey")]
 [assembly: AssemblyVersion("0.3.0.0")]
 [assembly: AssemblyFileVersion("0.3.0.0")]

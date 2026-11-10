@@ -1,0 +1,6 @@
+#!/bin/sh
+root="$(git rev-parse --show-toplevel)"
+if ! "$root/scripts/check.sh"; then
+  echo "pre-commit: build failed, commit aborted. Fix it, or bypass once with git commit --no-verify." >&2
+  exit 1
+fi
