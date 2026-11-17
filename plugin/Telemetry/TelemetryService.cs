@@ -9,7 +9,9 @@ using NINA.Equipment.Equipment.MyCamera;
 using NINA.Equipment.Equipment.MyFilterWheel;
 using NINA.Equipment.Equipment.MyFocuser;
 using NINA.Equipment.Equipment.MyGuider;
+using NINA.Equipment.Equipment.MySafetyMonitor;
 using NINA.Equipment.Equipment.MyTelescope;
+using NINA.Equipment.Equipment.MyWeatherData;
 using NINA.Equipment.Interfaces.Mediator;
 using NINA.WPF.Base.Interfaces.Mediator;
 using NinaHaTelemetry.Mqtt;
@@ -20,10 +22,12 @@ using static NinaHaTelemetry.Telemetry.Json;
 namespace NinaHaTelemetry.Telemetry {
 
     public sealed record NinaMediators(ICameraMediator Camera, ITelescopeMediator Telescope, IFilterWheelMediator FilterWheel,
-                                       IFocuserMediator Focuser, IGuiderMediator Guider, IImageSaveMediator ImageSave);
+                                       IFocuserMediator Focuser, IGuiderMediator Guider, IImageSaveMediator ImageSave,
+                                       IWeatherDataMediator Weather, ISafetyMonitorMediator Safety);
 
     public sealed class TelemetryService :
-        ICameraConsumer, ITelescopeConsumer, IFilterWheelConsumer, IFocuserConsumer, IGuiderConsumer, IDisposable {
+        ICameraConsumer, ITelescopeConsumer, IFilterWheelConsumer, IFocuserConsumer, IGuiderConsumer,
+        IWeatherDataConsumer, ISafetyMonitorConsumer, IDisposable {
 
         private const double PlateScaleArcsecUmPerMm = 206.265;
         private static readonly TimeSpan GuidePublishInterval = TimeSpan.FromSeconds(1);
@@ -55,6 +59,8 @@ namespace NinaHaTelemetry.Telemetry {
             nina.FilterWheel.RegisterConsumer(this);
             nina.Focuser.RegisterConsumer(this);
             nina.Guider.RegisterConsumer(this);
+            nina.Weather.RegisterConsumer(this);
+            nina.Safety.RegisterConsumer(this);
             nina.Guider.GuideEvent += OnGuideStep;
             nina.Guider.GuidingStarted += OnGuidingStarted;
             nina.Guider.GuidingStopped += OnGuidingStopped;
@@ -246,6 +252,43 @@ namespace NinaHaTelemetry.Telemetry {
             ["filter"] = i.Connected ? (i.IsMoving ? "Moving" : i.SelectedFilter?.Name) : null,
         }));
 
+        public void UpdateDeviceInfo(WeatherDataInfo i) => Guard("weather", () => {
+            bool on = i.Connected;
+            JToken Field(double value, int decimals) => on ? Num(value, decimals) : Null;
+            var fields = new[] { i.Temperature, i.Humidity, i.DewPoint, i.Pressure, i.CloudCover, i.RainRate, i.SkyBrightness,
+                                 i.SkyQuality, i.SkyTemperature, i.StarFWHM, i.WindSpeed, i.WindGust, i.WindDirection };
+            Send(topics.WeatherTopic, new JObject {
+                ["connected"] = on,
+                ["temperature"] = Field(i.Temperature, 1),
+                ["humidity"] = Field(i.Humidity, 0),
+                ["dew_point"] = Field(i.DewPoint, 1),
+                ["pressure"] = Field(i.Pressure, 1),
+                ["cloud_cover"] = Field(i.CloudCover, 0),
+                ["rain_rate"] = Field(i.RainRate, 2),
+                ["sky_brightness"] = Field(i.SkyBrightness, 2),
+                ["sky_quality"] = Field(i.SkyQuality, 2),
+                ["sky_temperature"] = Field(i.SkyTemperature, 1),
+                ["star_fwhm"] = Field(i.StarFWHM, 2),
+                ["wind_speed"] = Field(i.WindSpeed, 1),
+                ["wind_gust"] = Field(i.WindGust, 1),
+                ["wind_direction"] = Field(i.WindDirection, 0),
+                ["attributes"] = new JObject {
+                    ["device"] = on ? i.Name : null,
+                    ["average_period_h"] = Field(i.AveragePeriod, 2),
+                    ["supported_fields"] = on ? Array.FindAll(fields, double.IsFinite).Length : 0,
+                },
+            });
+        });
+
+        public void UpdateDeviceInfo(SafetyMonitorInfo i) => Guard("safety", () => Send(topics.SafetyTopic, new JObject {
+            ["connected"] = i.Connected,
+            ["is_safe"] = i.Connected ? i.IsSafe : null,
+            ["state"] = !i.Connected ? "Disconnected" : i.IsSafe ? "Safe" : "Unsafe",
+            ["attributes"] = new JObject {
+                ["device"] = i.Connected ? i.Name : null,
+            },
+        }));
+
         private void OnImageSaved(object sender, ImageSavedEventArgs e) {
             Guard("image", () => Send(topics.ImageTopic, ImageState(e)));
             PublishPreview(e);
@@ -305,6 +348,8 @@ namespace NinaHaTelemetry.Telemetry {
             nina.FilterWheel.RemoveConsumer(this);
             nina.Focuser.RemoveConsumer(this);
             nina.Guider.RemoveConsumer(this);
+            nina.Weather.RemoveConsumer(this);
+            nina.Safety.RemoveConsumer(this);
         }
     }
 }
