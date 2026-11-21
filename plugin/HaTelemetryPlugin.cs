@@ -40,9 +40,9 @@ namespace NinaHaTelemetry {
         [ImportingConstructor]
         public HaTelemetryPlugin(IProfileService profileService, ICameraMediator camera, ITelescopeMediator telescope,
                                  IFilterWheelMediator filterWheel, IFocuserMediator focuser, IGuiderMediator guider,
-                                 IImageSaveMediator imageSave) {
+                                 IImageSaveMediator imageSave, IWeatherDataMediator weather, ISafetyMonitorMediator safety) {
             this.profileService = profileService;
-            nina = new NinaMediators(camera, telescope, filterWheel, focuser, guider, imageSave);
+            nina = new NinaMediators(camera, telescope, filterWheel, focuser, guider, imageSave, weather, safety);
             options = new PluginOptionsAccessor(profileService, Guid.Parse(Identifier));
             Log.Info = message => Logger.Info(message);
             Log.Warn = message => Logger.Warning(message);

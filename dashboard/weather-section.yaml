@@ -1,0 +1,55 @@
+type: grid
+cards:
+  - type: heading
+    heading: Conditions
+    icon: mdi:weather-night
+  - type: tile
+    entity: binary_sensor.nina_NODE_safety_unsafe
+    name: Safety
+    grid_options:
+      columns: 12
+  - type: tile
+    entity: sensor.nina_NODE_weather_temperature
+  - type: tile
+    entity: sensor.nina_NODE_weather_dew_point
+  - type: tile
+    entity: sensor.nina_NODE_weather_humidity
+  - type: tile
+    entity: sensor.nina_NODE_weather_cloud_cover
+  - type: tile
+    entity: sensor.nina_NODE_weather_wind_speed
+  - type: tile
+    entity: sensor.nina_NODE_weather_sky_quality
+  - type: custom:nina-history-card
+    title: Temperature and dew point
+    hours: 6
+    height: 120
+    decimals: 1
+    entities:
+      - entity: sensor.nina_NODE_weather_temperature
+        name: Ambient
+      - entity: sensor.nina_NODE_weather_dew_point
+        name: Dew point
+      - entity: sensor.nina_NODE_weather_sky_temperature
+        name: Sky
+  - type: custom:nina-history-card
+    title: Cloud cover
+    hours: 6
+    height: 100
+    decimals: 0
+    min: 0
+    max: 100
+    entities:
+      - entity: sensor.nina_NODE_weather_cloud_cover
+        name: Cloud
+  - type: custom:nina-history-card
+    title: Wind
+    hours: 6
+    height: 100
+    decimals: 1
+    min: 0
+    entities:
+      - entity: sensor.nina_NODE_weather_wind_speed
+        name: Speed
+      - entity: sensor.nina_NODE_weather_wind_gust
+        name: Gust

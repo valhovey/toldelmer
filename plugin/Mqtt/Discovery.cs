@@ -22,6 +22,8 @@ namespace NinaHaTelemetry.Mqtt {
         public string AutofocusTopic => $"{Base}/autofocus";
         public string FlipTopic => $"{Base}/flip";
         public string GuideImageTopic => $"{Base}/guide_image";
+        public string WeatherTopic => $"{Base}/weather";
+        public string SafetyTopic => $"{Base}/safety";
 
         private readonly string displayName;
         private readonly string version;
@@ -100,6 +102,25 @@ namespace NinaHaTelemetry.Mqtt {
 
             yield return Sensor("autofocus", "Last autofocus", AutofocusTopic, "position", unit: "steps", icon: "mdi:image-filter-center-focus", withAttributes: true);
             yield return Sensor("autofocus_hfr", "Autofocus HFR", AutofocusTopic, "hfr", unit: "px", icon: "mdi:blur-radial");
+
+            yield return Sensor("weather_temperature", "Ambient temperature", WeatherTopic, "temperature", unit: "°C", deviceClass: "temperature", measurement: true, withAttributes: true);
+            yield return Sensor("weather_humidity", "Humidity", WeatherTopic, "humidity", unit: "%", deviceClass: "humidity", measurement: true);
+            yield return Sensor("weather_dew_point", "Dew point", WeatherTopic, "dew_point", unit: "°C", deviceClass: "temperature", measurement: true, icon: "mdi:water-thermometer");
+            yield return Sensor("weather_pressure", "Pressure", WeatherTopic, "pressure", unit: "hPa", deviceClass: "atmospheric_pressure", measurement: true);
+            yield return Sensor("weather_cloud_cover", "Cloud cover", WeatherTopic, "cloud_cover", unit: "%", measurement: true, icon: "mdi:weather-cloudy");
+            yield return Sensor("weather_rain_rate", "Rain rate", WeatherTopic, "rain_rate", unit: "mm/h", deviceClass: "precipitation_intensity", measurement: true);
+            yield return Sensor("weather_sky_brightness", "Sky brightness", WeatherTopic, "sky_brightness", unit: "lx", deviceClass: "illuminance", measurement: true);
+            yield return Sensor("weather_sky_quality", "Sky quality", WeatherTopic, "sky_quality", unit: "mag/arcsec²", measurement: true, icon: "mdi:weather-night");
+            yield return Sensor("weather_sky_temperature", "Sky temperature", WeatherTopic, "sky_temperature", unit: "°C", deviceClass: "temperature", measurement: true, icon: "mdi:thermometer-chevron-down");
+            yield return Sensor("weather_star_fwhm", "Seeing (star FWHM)", WeatherTopic, "star_fwhm", unit: "″", measurement: true, icon: "mdi:star-outline");
+            yield return Sensor("weather_wind_speed", "Wind speed", WeatherTopic, "wind_speed", unit: "m/s", deviceClass: "wind_speed", measurement: true);
+            yield return Sensor("weather_wind_gust", "Wind gust", WeatherTopic, "wind_gust", unit: "m/s", deviceClass: "wind_speed", measurement: true, icon: "mdi:weather-windy-variant");
+            yield return Sensor("weather_wind_direction", "Wind direction", WeatherTopic, "wind_direction", unit: "°", icon: "mdi:compass-outline");
+            yield return Binary("weather_connected", "Weather connected", WeatherTopic, "connected", deviceClass: "connectivity", diagnostic: true);
+
+            yield return Unsafe("safety_unsafe", "Safety", SafetyTopic, "is_safe");
+            yield return Sensor("safety_state", "Safety state", SafetyTopic, "state", icon: "mdi:shield-half-full", withAttributes: true);
+            yield return Binary("safety_connected", "Safety monitor connected", SafetyTopic, "connected", deviceClass: "connectivity", diagnostic: true);
         }
 
         private static Entity Sensor(string id, string name, string topic, string field, string unit = null, string deviceClass = null,
@@ -123,6 +144,13 @@ namespace NinaHaTelemetry.Mqtt {
             entity.Set("device_class", deviceClass);
             entity.Set("icon", icon);
             entity.Set("entity_category", diagnostic ? "diagnostic" : null);
+            return entity;
+        }
+
+        private static Entity Unsafe(string id, string name, string topic, string safeField) {
+            var template = $"{{% if value_json.{safeField} is none %}}None{{% elif value_json.{safeField} %}}OFF{{% else %}}ON{{% endif %}}";
+            var entity = new Entity("binary_sensor", id, name, topic, template);
+            entity.Set("device_class", "safety");
             return entity;
         }
 

@@ -46,6 +46,8 @@ Once configured, the entities should show up automatically in Home Assistant und
 | Focuser | position, temperature, connected; last autofocus position and HFR, with the focus curve |
 | Filter wheel | current filter, connected |
 | Last image | HFR (px and "), image scale, stars, filter, target, time, JPEG preview |
+| Weather | ambient temperature, humidity, dew point, pressure, cloud cover, rain rate, sky brightness, sky quality, sky temperature, seeing (star FWHM), wind speed/gust/direction, connected. Fields your weather device doesn't report stay unknown |
+| Safety monitor | safety (`device_class: safety`, on = unsafe), safety state, connected |
 
 There is also an option `Remove HA Entities` that will remove the entities added by this plugin. This is an option in the config for the plugin on NINA.
 
@@ -62,6 +64,8 @@ To set this up, add `dashboard/nina-telemetry-cards.js` as a dashboard resource 
 Pick a name for your node ID you configured in the plugin and create a YAML file for your dashboard with `sed 's/nina_NODE/nina_observatory/g' dashboard/nina-dashboard.yaml > my-dashboard.yml`. Then create a new dashboard using the generated YAML.
 
 If you also want to include PHD2, paste in the `dashboard/guide-frame-section.yaml`. You will also need to rename the node ID like you did with the other YAML.
+
+If you have a weather device or safety monitor connected in NINA, paste in `dashboard/weather-section.yaml` the same way.
 
 ## Building
 

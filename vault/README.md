@@ -11,6 +11,7 @@ Working knowledge for **Toldelmer - HA Telemetry** (repo `toldelmer`), a read-on
 - [[Offline behaviour]]: timeouts, backoff, log throttling, what never blocks NINA
 - [[Meridian flip tracking]]: phase model and flip time
 - [[Autofocus telemetry]]: the live curve plus the report file
+- [[Weather and safety telemetry]]: weather device fields, units, NaN handling, safety inversion
 - [[Options page]]: settings, DPAPI password, WPF theming gotcha
 
 ## PHD2 (optional)

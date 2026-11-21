@@ -8,7 +8,7 @@ The NINA plugin in `plugin/` (`NINA.HaTelemetry.dll`, `net8.0-windows`, `NINA.Pl
 - `HaTelemetryPlugin`: the MEF manifest and [[Options page]] view model. It owns the lifecycle. `Initialize` starts in the background, `Teardown` stops, and a profile change restarts. Start and stop are serialised on a `SemaphoreSlim`, because Initialize, ProfileChanged and Apply can all fire close together.
 - `Mqtt/Discovery`: every entity, topic and template. See [[Discovery schema]].
 - `Mqtt/MqttLink`: the connection and the publish pump. See [[MQTT link]].
-- `Telemetry/TelemetryService`: the mediator consumer for camera, mount, guider, focuser and filter wheel, plus the image-saved and flip handlers. It builds the JSON for each topic. Every callback goes through `Guard`, which catches, throttle-logs and never throws back into NINA.
+- `Telemetry/TelemetryService`: the mediator consumer for camera, mount, guider, focuser, filter wheel, weather and safety monitor ([[Weather and safety telemetry]]), plus the image-saved and flip handlers. It builds the JSON for each topic. Every callback goes through `Guard`, which catches, throttle-logs and never throws back into NINA.
 - `Telemetry/MeridianFlipTracker`: the flip state machine. See [[Meridian flip tracking]].
 - `Telemetry/AutofocusTracker`: the AF points, the report watcher and the summary. See [[Autofocus telemetry]].
 - `Telemetry/Json`: `Num` (rounds, turns non-finite into null), `Iso`, and `Finite` (parses the string "NaN" too).

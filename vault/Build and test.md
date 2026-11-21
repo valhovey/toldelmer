@@ -21,5 +21,6 @@ cd tools/OfflineHarness && dotnet run -- <phd2.fits> <out-dir> # ALL PASS / SOME
 `ilspycmd` 8.2.0.7535 (newer versions need a newer runtime) with `DOTNET_ROLL_FORWARD=Major`, run against `~/.nuget/packages/nina.*/3.2.0.9001/lib/*/*.dll`. Results go on [[NINA data sources]].
 
 ## Gotchas
+- On a machine with only a .NET 9/10 SDK (no 8.0 runtime), the build works but `dotnet run` of DiscoveryDump fails with "framework 8.0.0 not found". Set `DOTNET_ROLL_FORWARD=Major` (as of 2026-11-16, author's Linux box).
 - The `Makefile` resolves `dotnet` to a full path (PATH, then `~/.dotnet/dotnet`) and calls `$(DOTNET)`. macOS's stock GNU make 3.81 looks up simple recipe commands with its *own* PATH, so `export PATH := ...` in the Makefile did not help: `make: dotnet: No such file or directory`.
 - The harness exits 1 on a failed check and aborts (exit 134) on an unreadable FITS; either fails `make test`.
